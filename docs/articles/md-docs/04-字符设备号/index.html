@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
+    <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
+
+</head>
+<body class="light">
+    <div class='markdown-body'><h1>04-字符设备号</h1><p>modinfo : 查看ko模块的描述信息</p><p>对于上一小节(params)中hello.c中定义了一些信息</p><pre><code class="language-c">MODULE_LICENSE("GPL");
+module_param(whom,charp,0644);
+module_param_named(var_out,var,int,0644);
+
+module_init(hello_init);
+module_exit(hello_exit);</code></pre><p>我们可以通过modinfo指令查看编译后的ko模块文件</p><pre><code class="language-bash">root@ubuntu:/home/lzx/Driver/param# modinfo hello.ko
+filename:       /home/lzx/Driver/param/hello.ko
+license:        GPL
+srcversion:     0FAD6E360EC6E7431342E2F
+depends:
+retpoline:      Y
+name:           hello
+vermagic:       4.15.0-142-generic SMP mod_unload
+parm:           whom:charp
+parm:           var_out:int</code></pre><h2>设备分类</h2><p>linux下设备分为三类,因为对不同设备进行访问的时候传递数据格式,内容是不一样的</p><ul><li>字符设备</li></ul><ul><li>块设备: 数据块(扇区,块,数据偏移 BIO结构体)</li></ul><ul><li>网络设备: 数据帧</li></ul><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20221204235946.png" alt="20221204235946"></p><p>应用程序需要通过文件节点来找到字符设备或块设备,在字符设备/块设备的基础上再去编写一些驱动程序,这些驱动需要与硬件相关联</p><p>linux会使用一个链表/数组将所有的外设驱动统一管理起来,所有操作硬件的函数使用一个统一的函数编写</p><h2>字符设备</h2><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20221205000343.png" alt="20221205000343"></p><p>字符设备具有一个设备号,是一个无符号整型(unsigned int),高12位为主设备号,低20位次设备号</p><p>区分主次设备号的目的在于,串口有很多个,他们的功能比较类似,可能仅仅是硬件寄存器的地址不同,同样的一套驱动可能仅仅是操作的物理地址不同</p><p>这种情况下我们可以让四个串口设备共用一个主设备号,通过次设备号来区分,这样一个驱动程序就可以驱动多个串口设备</p><p>我们可以通过如下指令查看所有的设备</p><pre><code class="language-bash">cat /proc/devices</code></pre><p>其中 /proc(processing) 目录十分重要其中包含系统运行时的信息,进程的id及信息,cpuinfod等等</p><pre><code class="language-c">#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kdev_t.h&gt;
+#include &lt;linux/fs.h&gt;
+
+static int major = 233;
+static int minor = 0;
+
+static dev_t devno;
+
+static int hello_init(void)
+{
+    int result;
+    printk("hello_init \n");
+    devno = MKDEV(major,minor);
+    result = register_chrdev_region(devno, 1, "test");
+    if(result&lt;0)
+    {
+        printk("register_chrdev_region fail \n");
+        return result;
+    }
+    return 0;
+}
+static void hello_exit(void)
+{
+    printk("hello_exit \n");
+    unregister_chrdev_region(devno,1);
+    return;
+}
+
+module_init(hello_init);
+module_exit(hello_exit);
+//proc/devices</code></pre><p>在代码中我们定义了主设备号 233,次设备号0. 使用 <code>MKDEV</code> 来创建创建一个设备号 (233<<20 | 0) = dev_t devno</p><p>接着使用了两个函数,在创建时注册<code>register_chrdev_region</code>(注册一个次设备号即可),在释放时<code>unregister_chrdev_region</code>注销</p><p>这里的设别号(0-255)只需要选择一个没有被占用过的就可以了</p><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20221205002208.png" alt="20221205002208"></p></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/03-params","../../md-docs/05-字符设备架构","ab")</script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+</body>
+</html>

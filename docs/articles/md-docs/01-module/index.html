@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
+    <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
+
+</head>
+<body class="light">
+    <div class='markdown-body'><h1>01-module</h1><h2>代码部分</h2><pre><code class="language-c">
+#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("PD");
+
+static int hello_init(void)
+{
+    printk("hello_init \n");
+    return 0;
+}
+static void hello_exit(void)
+{
+    printk("hello_exit \n");
+    return;
+}
+
+module_init(hello_init); //insmod
+module_exit(hello_exit);//rmmod
+</code></pre><p>模块的加载如上述代码所示,其中 <code>MODULE_LICENSE</code> 和 <code>MODULE_AUTHOR</code> 用于说明开源协议和作者,为可选项,建议加上</p><p>应使用 <code>printk</code> 作为内核模块的输出显示</p><p>最后将对应函数绑定到模块进入和推出</p><pre><code class="language-Makefile">ifneq ($(KERNELRELEASE),)
+obj-m:=hello.o
+else
+KDIR :=/lib/modules/$(shell uname -r)/build
+PWD  :=$(shell pwd)
+all:
+    make -C $(KDIR) M=$(PWD) modules
+clean:
+    rm -f *.ko *.o *.mod.o *.symvers *.cmd  *.mod.c *.order
+endif</code></pre><p>Makefile文件一共执行三次,第一次 <code>KERNELRELEASE</code> 宏为false,执行else</p><p><code>uname -r</code> 的返回值为linux内核路径的文件夹名字,接着进入该路径执行linux内核的modules目标,M带入当前路径</p><p>第二次进入使用gcc生成hello.o</p><p>第三次进入生成其余文件,其中 <code>hello.ko</code>(kernel object) 为模块文件</p><h2>运行</h2><pre><code class="language-bash">sudo su
+make
+demesg -c # 删除其余信息
+insmod hello.ko # 导入模块
+dmesg
+lsmod # 显示所有模块
+# lsmod hello
+rmmod hello.ko # 删除模块</code></pre></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/00-环境配置","../../md-docs/02-export","ab")</script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+</body>
+</html>

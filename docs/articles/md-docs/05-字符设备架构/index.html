@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
+    <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
+
+</head>
+<body class="light">
+    <div class='markdown-body'><h1>05-字符设备架构</h1><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20221205121025.png" alt="20221205121025"></p><p>需要我们针对不同的硬件完成相应的 <code>file_operations</code> 底层实现,这样更高层统一调用函数</p><p>用户层创建字符设备驱动的办法需要借助虚拟文件系统(VFS Virtual File System)</p><p>使用mknod命令创建一个设备</p><pre><code class="language-bash">mknod /dev/hello c 233 0</code></pre><blockquote>mknod + 文件名 + 设备分类 主设备号 + 次设备号</blockquote><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20221205121725.png" alt="20221205121725"></p><p>如果想要编写程序找到驱动程序,那么就需要利用系统调用</p><pre><code class="language-c">fd = open("/dev/hello",O_RDWR);</code></pre><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20221205122042.png" alt="20221205122042"></p><p>其中fd文件描述符具有唯一性,每一次打开都会产生一个不同的fd</p><p>open调用系统调用 sys_open 然后找到 i_rdev ,找到 chrdevs中的对应 char_device_struct ,找到cdev,接下里就可以执行对应的 file_operations了</p></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/04-字符设备号","../../md-docs/06-字符设备注册","ab")</script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
+    <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
+
+</head>
+<body class="light">
+    <div class='markdown-body'><h1>06-字符设备注册</h1><p>字符设备注册相关有三个函数</p><ul><li>cdev_init</li></ul><ul><li>cdev_add</li></ul><ul><li>cdev_del</li></ul><pre><code class="language-c">#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/kdev_t.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/cdev.h&gt;
+
+static int major = 233;
+static int minor = 0;
+static dev_t devno;
+static struct cdev cdev;
+static int hello_open (struct inode *inode, struct file *filep)
+{
+    printk("hello_open()\n");
+    return 0;
+}
+static struct file_operations hello_ops =
+{
+    .open = hello_open,
+};
+static int hello_init(void)
+{
+    int result;
+    int error;  
+    printk("hello_init \n");
+    devno = MKDEV(major,minor); 
+    result = register_chrdev_region(devno, 1, "kamilu");
+    if(result&lt;0)
+    {
+        printk("register_chrdev_region fail \n");
+        return result;
+    }
+    cdev_init(&cdev,&hello_ops);
+    error = cdev_add(&cdev,devno,1);
+    if(error &lt; 0)
+    {
+        printk("cdev_add fail \n");
+        unregister_chrdev_region(devno,1);
+        return error;
+    }
+    return 0;
+}
+static void hello_exit(void)
+{
+    printk("hello_exit \n");
+    cdev_del(&cdev);
+    unregister_chrdev_region(devno,1);
+    return;
+}
+module_init(hello_init);
+module_exit(hello_exit);
+//proc/devices</code></pre><p>加载模块之后可以看到hello模块,并且注册了一个名为 "kamilu" 的设备</p><pre><code class="language-bash">make
+insmod hello.ko</code></pre><p>接下来创建一个字符设备,注意这里创建的设备名字任意,不一定与之前的kamilu相同</p><pre><code class="language-bash">mknod /dev/test c 233 0</code></pre><blockquote>如果显示已存在则rm删除即可</blockquote><p>然后编写一段测试程序,这里的 /dev/test 要与上文mknod注册的名字相同</p><pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+int main()
+{
+    int fd;
+    fd = open("/dev/test",O_RDWR);
+    if(fd&lt;0)
+    {
+        perror("open fail \n");
+        return 0;
+    }
+    printf("open ok \n ");
+}
+</code></pre><pre><code class="language-bash">gcc test.c
+./a.out
+
+# open ok</code></pre><p>也可以查看日志信息,调用了open函数</p><pre><code class="language-bash">root@ubuntu:/home/lzx/Driver/cdev# dmesg
+[ 6576.202354] hello_init
+[ 6615.211416] hello_open()</code></pre><h2>更简单的字符设备注册</h2><p>前文代码很多地方都是固定的,所以可以使用一个简单的函数调用<code>register_chrdev</code>完成上述功能</p><p><code>ret = register_chrdev(主设备号, 名字, &fops);</code></p><pre><code class="language-c">#include &lt;linux/module.h&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/sched.h&gt;
+#include &lt;linux/poll.h&gt;
+#include &lt;linux/proc_fs.h&gt;
+#include &lt;linux/skbuff.h&gt;
+#include &lt;linux/seq_file.h&gt;
+#include &lt;asm/uaccess.h&gt;
+
+unsigned int major = 233;
+
+int hello_open (struct inode *inode, struct file *file)
+{
+    printk("hello_open()\n");
+    return 0;
+}
+
+int hello_release (struct inode *inode, struct file *file)
+{
+    printk("hello_release()\n");
+    return 0;
+}
+
+struct file_operations fops ={
+    .open = hello_open,
+    .release = hello_release,
+};
+
+static int hello_init(void)
+{
+    int ret;
+    printk("hello_init()\n");
+    ret = register_chrdev(major, "kamilu", &fops);
+    if(ret&lt;0)
+    {
+        printk("register_chrdev fail\n");
+        return ret;
+    }
+    return 0;   
+}
+
+static void hello_exit(void)
+{
+    printk("hello_exit()\n");
+    unregister_chrdev(major,"kamilu");
+    return ;
+}
+
+MODULE_LICENSE("GPL");
+module_init(hello_init);
+module_exit(hello_exit);
+</code></pre><p>功能等价</p><p>注意到我们添加了 open 和 release 两部分内容,所以我们编写一个测试文件,打开和关闭</p><pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;fcntl.h&gt;
+int main()
+{
+    int fd;
+    fd = open("/dev/test",O_RDWR);
+    if(fd&lt;0)
+    {
+        perror("open fail \n");
+        return 0;
+    }
+    close(fd);
+    printf("open ok \n ");
+}</code></pre><pre><code class="language-bash">root@ubuntu:/home/lzx/Driver/06-cdev# dmesg
+[10269.830564] hello_init()
+[10315.202089] hello_open()
+[10315.202094] hello_release()</code></pre></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/05-字符设备架构","../../md-docs/07-自动创建设备节点","ab")</script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+</body>
+</html>

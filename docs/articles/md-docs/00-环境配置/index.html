@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
+    <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
+
+</head>
+<body class="light">
+    <div class='markdown-body'><h1>00-环境配置</h1><p>参考 <a href="https://space.bilibili.com/661326452" target="_blank">一口Linux</a></p><h2>下载Linux内核源码</h2><p><a href="https://links.jianshu.com/go?to=http%3A%2F%2Fftp.sjtu.edu.cn%2Fsites%2Fftp.kernel.org%2Fpub%2Flinux%2Fkernel%2F" target="_blank">下载地址</a></p><p>笔者使用的是 Linux3.14.0-fs4412, 你可以在 <a href="https://github.com/luzhixing12345/LinuxDriver/releases/download/v0.0.1/linux-3.14.tar.xz" target="_blank">这里下载</a></p><h2>配置虚拟机, Ubuntu16.04</h2><p>VMWare Work statation + Ubuntu16.04 iso</p><p>默认完成安装,略</p><h2>配置开发环境</h2><pre><code class="language-bash">sudo apt-get install lsb-core</code></pre><p><a href="https://github.com/luzhixing12345/LinuxDriver/releases/download/v0.0.1/gcc-4.6.4.tar.xz" target="_blank">下载gcc4.6.4</a></p><p>将解压后将bin目录加入环境变量</p><pre><code class="language-bash">sudo vim /etc/bash.bashrc
+export  PATH=$PATH:/home/peng/toolchain/gcc-4.6.4/bin
+source /etc/bash.bashrc</code></pre><p>测试</p><pre><code class="language-bash">arm-none-linux-gnueabi-gcc  –v</code></pre><p>至此完成基础环境搭建</p><h2>配置 Vscode 环境</h2><p>测试文件如下,打开后可以看到飘红</p><pre><code class="language-c">#include &lt;linux/init.h&gt;
+#include &lt;linux/module.h&gt;
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("PD");
+
+static int hello_init(void)
+{
+    printk("hello_init \n");
+    return 0;
+}
+static void hello_exit(void)
+{
+    printk("hello_exit \n");
+    return;
+}
+
+module_init(hello_init); //insmod
+module_exit(hello_exit);//rmmod</code></pre><p>首先我们需要将Linux内核头文件所在的目录加入路径,改头文件的位置在 <code>/usr/src/linux???/include</code>, 其中中间的文件名部分可以使用如下指令查看获得</p><pre><code class="language-bash">uname -r</code></pre><p>笔者电脑是 x86 结构,所以添加 arch/x86/include 路径</p><p>最后需要使用两个宏用于静态语法检查的,笔者使用clangd,新建 <code>.vscode/settings.json</code> 填入即可.</p><pre><code class="language-json">{
+    "clangd.fallbackFlags": [
+        "-I/usr/src/linux-headers-4.15.0-142-generic/include",
+        "-I/usr/src/linux-headers-4.15.0-142-generic/arch/x86/include",
+        "-D __KERNEL__",
+        "-D __GNUC__"
+    ]
+}</code></pre><p>如果你使用 Microsoft 的 C++ extension 配置类似</p><pre><code class="language-json">{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/src/linux-headers-4.15.0-142-generic/include",
+                "/usr/src/linux-headers-4.15.0-142-generic/arch/x86/include",
+            ],
+            "defines": [
+                "__KERNEL__",
+                "__GNUC__"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerArgs": []
+        }
+    ],
+    "version": 4
+}</code></pre></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/README","../../md-docs/01-module","ab")</script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+</body>
+</html>
