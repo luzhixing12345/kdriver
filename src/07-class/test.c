@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <fcntl.h>
+#include <fcntl.h>  // for open
+#include <unistd.h> // for close
 int main()
 {
 	int fd;

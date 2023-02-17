@@ -1,8 +1,3 @@
-/*  
- *一口Linux
- *2021.6.21
- *version: 1.0.0
-*/
 
 #include <linux/init.h>
 #include <linux/module.h>
@@ -83,7 +78,6 @@ static struct file_operations hello_ops =
 static int hello_init(void)
 {
 	int result;
-	int error;
 	
 	printk("hello_init \n");
 	result = register_chrdev( major, "hello", &hello_ops);
