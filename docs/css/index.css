@@ -33,7 +33,7 @@ body {
   word-wrap: break-word;
   border-radius: 10px;
   box-shadow: rgba(17, 17, 26, 0.1) 0px 4px 16px, rgba(17, 17, 26, 0.05) 0px 8px 32px;
-  /* background-color: rgb(255, 255, 255); */
+  background-color: #fff;
 }
 
 .markdown-light {
@@ -157,6 +157,7 @@ blockquote {
   padding: 16px;
   overflow: auto;
   font-size: 85%;
+  /* max-height: 600px; */
   line-height: 1.45;
   background-color: #f6f8fa;
   border-radius: 3px;
@@ -272,6 +273,17 @@ blockquote {
   border-collapse: collapse;
 }
 
+.markdown-dark table tr {
+  background-color: #444444;
+  border-top: 1px solid #c6cbd1;
+  color: white;
+}
+
+.markdown-dark table tr:nth-child(2n) {
+  background-color: #808080 ;
+  color: white;
+}
+
 .markdown-body h1,
 .markdown-body h2,
 .markdown-body h3,
@@ -342,21 +354,21 @@ blockquote {
 
 .markdown-dark :not(pre) > code[class*="language-"],
 .markdown-dark pre[class*="language-"] {
-  background: #f0f0f4;
+  background: #303030;
 }
 
 .markdown-light .token.cdata,
 .markdown-light .token.comment,
 .markdown-light .token.doctype,
 .markdown-light .token.prolog {
-  color: #808080;
+  color: #6A9955;
 }
 
 .markdown-dark .token.cdata,
 .markdown-dark .token.comment,
 .markdown-dark .token.doctype,
 .markdown-dark .token.prolog {
-  color: #808080;
+  color: #6A9955;
 }
 
 .markdown-light code[class*="language-"],
@@ -366,7 +378,7 @@ blockquote {
 
 .markdown-dark code[class*="language-"],
 .markdown-dark pre[class*="language-"] {
-  color: #000;
+  color: #fff;
 }
 
 code[class*="language-"] ::-moz-selection,
@@ -449,13 +461,37 @@ pre[class*="language-"]::selection {
 .markdown-light .token.atrule,
 .markdown-light .token.attr-value,
 .markdown-light .token.keyword {
-  color: #B980AD;
+  color: #569CD6;
+}
+
+.markdown-light .token.directive.keyword {
+  color: #C586C0;
+}
+
+.markdown-dark .token.directive.keyword {
+  color: #C586C0;
+}
+
+.markdown-light .token.directive-hash {
+  color: #C586C0;
+}
+
+.markdown-dark .token.directive-hash {
+  color: #C586C0;
+}
+
+.markdown-light .token.property {
+  color: #9CDCFE;
+}
+
+.markdown-dark .token.property {
+  color: #9CDCFE;
 }
 
 .markdown-dark .token.atrule,
 .markdown-dark .token.attr-value,
 .markdown-dark .token.keyword {
-  color: #B980AD;
+  color: #569CD6;
 }
 
 .markdown-light .token.function {
@@ -484,6 +520,11 @@ pre[class*="language-"]::selection {
   border-radius: 10px;
   transition: all 0.5s;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.change-dark {
+  background-color: #6a737d;
+  color: #f8f9fa;
 }
 
 .change-article:hover {
@@ -637,6 +678,18 @@ pre[class*="language-"]::selection {
   color: #0366d6;
 }
 
+.link-active {
+  font-weight: bold !important;
+  border-bottom: 2px solid #555;
+  padding-bottom: 2px;
+}
+
+.link-active-dark {
+    font-weight: bold !important;
+    border-bottom: 2px solid #f3f3f3;
+    padding-bottom: 2px;
+  }
+
 /* 图片下的文字的样式 */
 
 .markdown-body p > p {
@@ -674,21 +727,20 @@ pre[class*="language-"]::selection {
   /* display: flex; */
 }
 
-.zood a{
+.zood a {
   text-decoration: none;
   color: grey;
   /* display: block; */
 }
 
 .zood a:hover {
-  text-decoration:underline;
+  text-decoration: underline;
 }
 
 .markdown-body input {
   margin-top: 10px;
   margin-bottom: 10px;
 }
-
 
 .center-search {
   display: none;
@@ -709,14 +761,14 @@ pre[class*="language-"]::selection {
   width: 90%;
   height: 30px;
   /* border: #6a737d; */
-  border:none;
+  border: none;
   outline: none;
   margin: 10px;
   border-radius: 5px;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
   font-size: 16px;
   letter-spacing: 0.02em;
-  padding-inline-start:5px;
+  padding-inline-start: 5px;
 }
 
 .center-search .search-header {
@@ -725,7 +777,7 @@ pre[class*="language-"]::selection {
   /* justify-content: space-around; */
 }
 
-.center-search .search-header img {  
+.center-search .search-header img {
   margin-right: 10px;
 }
 
@@ -760,7 +812,7 @@ pre[class*="language-"]::selection {
 }
 
 .search-selected {
-  background-color: rgb(66,184,131);
+  background-color: rgb(66, 184, 131);
   color: white;
 }
 

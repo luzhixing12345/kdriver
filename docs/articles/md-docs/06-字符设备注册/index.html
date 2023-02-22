@@ -61,7 +61,7 @@ static void hello_exit(void)
 module_init(hello_init);
 module_exit(hello_exit);
 //proc/devices</code></pre><p>加载模块之后可以看到hello模块,并且注册了一个名为 "kamilu" 的设备</p><pre><code class="language-bash">make
-insmod hello.ko</code></pre><p>接下来创建一个字符设备,注意这里创建的设备名字任意,不一定与之前的kamilu相同</p><pre><code class="language-bash">mknod /dev/test c 233 0</code></pre><blockquote>如果显示已存在则rm删除即可</blockquote><p>然后编写一段测试程序,这里的 /dev/test 要与上文mknod注册的名字相同</p><pre><code class="language-c">#include &lt;stdio.h&gt;
+insmod hello.ko</code></pre><p>接下来创建一个字符设备,注意这里创建的设备名字任意,不一定与之前的kamilu相同</p><pre><code class="language-bash">mknod /dev/test c 233 0</code></pre><blockquote><p>如果显示已存在则rm删除即可</p></blockquote><p>然后编写一段测试程序,这里的 /dev/test 要与上文mknod注册的名字相同</p><pre><code class="language-c">#include &lt;stdio.h&gt;
 #include &lt;sys/types.h&gt;
 #include &lt;sys/stat.h&gt;
 #include &lt;fcntl.h&gt;
@@ -154,6 +154,6 @@ int main()
 [10315.202094] hello_release()</code></pre></div>
     <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="../../md-docs/PCI驱动" >PCI驱动</a></li></ul></div>
     <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
-    <script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/05-字符设备架构","../../md-docs/07-自动创建设备节点","ab")</script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+    <script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/05-字符设备架构","../../md-docs/07-自动创建设备节点","ab")</script><script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
 </body>
 </html>

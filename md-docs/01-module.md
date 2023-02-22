@@ -81,3 +81,10 @@ lsmod # 显示所有模块
 # lsmod hello
 rmmod hello.ko # 删除模块
 ```
+
+```bash
+root@kamilu:/home/kamilu/Desktop/linux-driver/src/01-module# insmod hello.ko
+insmod: ERROR: could not insert module hello.ko: Key was rejected by service
+root@kamilu:/home/kamilu/Desktop/linux-driver/src/01-module# dmesg
+[ 1920.607501] Loading of unsigned module is rejected
+```
