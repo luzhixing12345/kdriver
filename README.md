@@ -6,4 +6,6 @@
 
 https://luzhixing12345.github.io/linux-driver
 
-对应每一节的代码保存在 `src/` 下
+## 参考
+
+- Linux设备驱动程序(第三版)
