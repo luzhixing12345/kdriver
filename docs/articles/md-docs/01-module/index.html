@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>
+        Document
+    </title>
     <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
     <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
 
 </head>
+
 <body class="light">
     <div class='markdown-body'><h1>01-module</h1><h2>代码部分</h2><pre><code class="language-c">#include &lt;linux/init.h&gt;
 #include &lt;linux/module.h&gt;
@@ -44,9 +48,26 @@ insmod hello.ko # 导入模块
 dmesg
 lsmod # 显示所有模块
 # lsmod hello
-rmmod hello.ko # 删除模块</code></pre></div>
-    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="../../md-docs/PCI驱动" >PCI驱动</a></li></ul></div>
-    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+rmmod hello.ko # 删除模块</code></pre><pre><code class="language-bash">root@kamilu:/home/kamilu/Desktop/linux-driver/src/01-module# insmod hello.ko
+insmod: ERROR: could not insert module hello.ko: Key was rejected by service
+root@kamilu:/home/kamilu/Desktop/linux-driver/src/01-module# dmesg
+[ 1920.607501] Loading of unsigned module is rejected</code></pre><pre><code class="language-bash">root@ubuntu:/home/lzx/Driver/module# dmesg -c
+[  617.165226] hello: loading out-of-tree module taints kernel.
+[  617.165343] hello: module verification failed: signature and/or required key missing - tainting kernel
+[  617.166355] hello_init
+[  804.914998] hello_exit</code></pre><p><a href="https://lantern.cool/note-pwn-kernel-compilation-problem/#gcc-%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98" target="_blank">https://lantern.cool/note-pwn-kernel-compilation-problem/#gcc-%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98</a></p><p><a href="https://richardweiyang-2.gitbook.io/kernel-exploring/00_index/10_those_buddy_in_kbuild" target="_blank">https://richardweiyang-2.gitbook.io/kernel-exploring/00_index/10_those_buddy_in_kbuild</a></p></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="../../md-docs/PCI驱动" >PCI驱动</a></li></ul><ul><li><a href="../../linux-kernel/build" >linux-kernel</a><ul><li><a href="../../linux-kernel/build" >build</a></li></ul></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank">zood</a></div>
     <script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/00-环境配置","../../md-docs/02-export","ab")</script><script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+    <script type="module">
+        const codeBlocks = document.querySelectorAll('.language-mermaid');
+        codeBlocks.forEach(codeBlock => {
+            codeBlock.classList.remove('language-mermaid');
+            codeBlock.classList.add('mermaid');
+        });
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </body>
+
 </html>

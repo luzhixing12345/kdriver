@@ -1,18 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>
+        Document
+    </title>
     <link rel='stylesheet' href=./css/prism.css /><link rel='stylesheet' href=./css/index.css />
     <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
 
 </head>
+
 <body class="light">
     <div class='markdown-body'><h1>linux-driver</h1><p>本文档为 Linux 驱动开发的学习笔记</p><p>主要参考书籍: Linux设备驱动程序(第三版)</p></div>
-    <div class="dir-tree"><ul><li><a href="./articles/md-docs/README" >README</a></li></ul><ul><li><a href="./articles/md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="./articles/md-docs/01-module" >01-module</a></li></ul><ul><li><a href="./articles/md-docs/02-export" >02-export</a></li></ul><ul><li><a href="./articles/md-docs/03-params" >03-params</a></li></ul><ul><li><a href="./articles/md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="./articles/md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="./articles/md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="./articles/md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="./articles/md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="./articles/md-docs/PCI驱动" >PCI驱动</a></li></ul></div>
-    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <div class="dir-tree"><ul><li><a href="./articles/md-docs/README" >README</a></li></ul><ul><li><a href="./articles/md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="./articles/md-docs/01-module" >01-module</a></li></ul><ul><li><a href="./articles/md-docs/02-export" >02-export</a></li></ul><ul><li><a href="./articles/md-docs/03-params" >03-params</a></li></ul><ul><li><a href="./articles/md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="./articles/md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="./articles/md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="./articles/md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="./articles/md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="./articles/md-docs/PCI驱动" >PCI驱动</a></li></ul><ul><li><a href="./articles/linux-kernel/build" >linux-kernel</a><ul><li><a href="./articles/linux-kernel/build" >build</a></li></ul></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank">zood</a></div>
     <script type="text/javascript" src="./js/next_front.js"></script><script>addLink(".","./articles/md-docs/00-环境配置","b")</script><script type="text/javascript" src="./js/change_mode.js"></script><script>addChangeModeButton("./img/sun.png","./img/moon.png")</script><script type="text/javascript" src="./js/copy_code.js"></script><script>addCodeCopy("./img/before_copy.png","./img/after_copy.png")</script><script type="text/javascript" src="./js/prism.js"></script><script type="text/javascript" src="./js/picture_preview.js"></script><script type="text/javascript" src="./js/check_box.js"></script>
+    <script type="module">
+        const codeBlocks = document.querySelectorAll('.language-mermaid');
+        codeBlocks.forEach(codeBlock => {
+            codeBlock.classList.remove('language-mermaid');
+            codeBlock.classList.add('mermaid');
+        });
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </body>
+
 </html>

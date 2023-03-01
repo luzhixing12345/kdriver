@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>
+        Document
+    </title>
     <link rel='stylesheet' href=../../../css/prism.css /><link rel='stylesheet' href=../../../css/index.css />
     <link rel="icon" href="https://raw.githubusercontent.com/learner-lu/picbed/master/logo.png">
 
 </head>
+
 <body class="light">
-    <div class='markdown-body'><h1>00-环境配置</h1><h2>下载Linux内核源码</h2><p><a href="https://www.kernel.org/" target="_blank">linux kernel</a></p><p>笔者使用的是 Linux3.14.0-fs4412, 你可以在 <a href="https://github.com/luzhixing12345/LinuxDriver/releases/download/v0.0.1/linux-3.14.tar.xz" target="_blank">这里下载</a></p><h2>配置虚拟机, Ubuntu16.04</h2><p>VMWare Work statation + Ubuntu16.04 iso</p><p>默认完成安装,略</p><h2>配置开发环境</h2><pre><code class="language-bash">sudo apt-get install lsb-core</code></pre><p><a href="https://github.com/luzhixing12345/LinuxDriver/releases/download/v0.0.1/gcc-4.6.4.tar.xz" target="_blank">下载gcc4.6.4</a></p><p>将解压后将bin目录加入环境变量</p><pre><code class="language-bash">sudo vim /etc/bash.bashrc
-export  PATH=$PATH:/home/peng/toolchain/gcc-4.6.4/bin
-source /etc/bash.bashrc</code></pre><p>测试</p><pre><code class="language-bash">arm-none-linux-gnueabi-gcc  –v</code></pre><p>至此完成基础环境搭建</p><h2>配置 Vscode 环境</h2><p>测试文件如下,打开后可以看到飘红</p><pre><code class="language-c">#include &lt;linux/init.h&gt;
+    <div class='markdown-body'><h1>00-环境配置</h1><h2>配置虚拟机, Ubuntu16.04</h2><p>VMWare Work statation + <a href="https://releases.ubuntu.com/16.04/ubuntu-16.04.7-desktop-amd64.iso" target="_blank">Ubuntu16.04.7</a></p><pre><code class="language-bash">sudo apt install lsb_core</code></pre><h2>配置 Vscode 环境</h2><p>测试文件如下,打开后可以看到飘红</p><pre><code class="language-c">#include &lt;linux/init.h&gt;
 #include &lt;linux/module.h&gt;
 
 MODULE_LICENSE("GPL");
@@ -30,15 +32,15 @@ static void hello_exit(void)
 }
 
 module_init(hello_init); //insmod
-module_exit(hello_exit);//rmmod</code></pre><p>首先我们需要将Linux内核头文件所在的目录加入路径,改头文件的位置在 <code>/usr/src/linux???/include</code>, 其中中间的文件名部分可以使用如下指令查看获得</p><pre><code class="language-bash">uname -r
-# 4.15.0-142-generic</code></pre><p>笔者电脑是 x86 架构,所以添加 arch/x86/include 路径</p><p>如果你使用 Microsoft 的 C++ extension 配置如下</p><p>其中<code>/home/lzx/Driver/linux-3.14-fs4412/include</code>为linux源码的include的路径,还需要两个宏 <code>__KERNEL__</code> <code>__GNUC__</code></p><pre><code class="language-json">{
+module_exit(hello_exit); //rmmod</code></pre><p>首先我们需要将Linux内核头文件所在的目录加入路径,头文件的位置在 <code>/usr/src/linux-headers-$(uname -r)/include</code>, 其中中间的文件名部分可以使用如下指令查看获得</p><pre><code class="language-bash">uname -r
+# 4.15.0-112-generic</code></pre><p>笔者电脑是 x86 架构,所以添加 arch/x86/include 路径</p><p>建议使用 Microsoft 的 C++ extension 配置如下, <b>不要使用clangd!</b></p><p><code>/usr/src/linux-headers-4.15.0-142</code> 为linux源码的include的路径,还需要两个宏 <code>__KERNEL__</code> <code>__GNUC__</code></p><pre><code class="language-json">{
     "configurations": [
         {
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
+                "/usr/src/linux-headers-4.15.0-142/include",
                 "/usr/src/linux-headers-4.15.0-142-generic/include",
-                "/home/lzx/Driver/linux-3.14-fs4412/include",
                 "/usr/src/linux-headers-4.15.0-142-generic/arch/x86/include",
                 "/usr/src/linux-headers-4.15.0-142/include/uapi",
                 "/usr/src/linux-headers-4.15.0-142-generic/arch/x86/include/generated"
@@ -48,18 +50,28 @@ module_exit(hello_exit);//rmmod</code></pre><p>首先我们需要将Linux内核�
                 "__GNUC__"
             ],
             "compilerPath": "/usr/bin/gcc",
-            "cStandard": "c11",
-            "cppStandard": "c++17",
-            "intelliSenseMode": "linux-gcc-x64",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "${default}",
             "compilerArgs": []
         }
     ],
     "version": 4
-}</code></pre><p>注意,无法在vmworkstation使用<code>sudo su</code>进入root用户,解决办法是重新设置一下密码,然后就可以进入了</p><pre><code class="language-bash">sudo passwd
+}</code></pre><p>稍等后可以看到一切正常, 智能提示也出来了</p><p><img src="https://raw.githubusercontent.com/learner-lu/picbed/master/20230301111632.png" alt="20230301111632"></p><h2>root用户</h2><p>内核驱动的安装卸载都需要root权限, VMware 需要修改一次密码才可以正常进入su</p><p>注意, 如果使用 <code>su</code> 进入root用户失败, 显示 <code>su: Authentication failure</code>, 则需要先更新一下密码然后再重新尝试一下</p><pre><code class="language-bash">sudo passwd
 # 你的新密码,可以和原密码相同
 su</code></pre></div>
-    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="../../md-docs/PCI驱动" >PCI驱动</a></li></ul></div>
-    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank" >zood</a></div>
+    <div class="dir-tree"><ul><li><a href="../../md-docs/README" >README</a></li></ul><ul><li><a href="../../md-docs/00-环境配置" >00-环境配置</a></li></ul><ul><li><a href="../../md-docs/01-module" >01-module</a></li></ul><ul><li><a href="../../md-docs/02-export" >02-export</a></li></ul><ul><li><a href="../../md-docs/03-params" >03-params</a></li></ul><ul><li><a href="../../md-docs/04-字符设备号" >04-字符设备号</a></li></ul><ul><li><a href="../../md-docs/05-字符设备架构" >05-字符设备架构</a></li></ul><ul><li><a href="../../md-docs/06-字符设备注册" >06-字符设备注册</a></li></ul><ul><li><a href="../../md-docs/07-自动创建设备节点" >07-自动创建设备节点</a></li></ul><ul><li><a href="../../md-docs/08-读写" >08-读写</a></li></ul><ul><li><a href="../../md-docs/PCI驱动" >PCI驱动</a></li></ul><ul><li><a href="../../linux-kernel/build" >linux-kernel</a><ul><li><a href="../../linux-kernel/build" >build</a></li></ul></li></ul></div>
+    <div class="zood"><a class="" href="https://github.com/luzhixing12345/zood" target="_blank">zood</a></div>
     <script type="text/javascript" src="../../../js/next_front.js"></script><script>addLink("../../md-docs/README","../../md-docs/01-module","ab")</script><script type="text/javascript" src="../../../js/change_mode.js"></script><script>addChangeModeButton("../../../img/sun.png","../../../img/moon.png")</script><script type="text/javascript" src="../../../js/copy_code.js"></script><script>addCodeCopy("../../../img/before_copy.png","../../../img/after_copy.png")</script><script type="text/javascript" src="../../../js/prism.js"></script><script type="text/javascript" src="../../../js/picture_preview.js"></script><script type="text/javascript" src="../../../js/check_box.js"></script>
+    <script type="module">
+        const codeBlocks = document.querySelectorAll('.language-mermaid');
+        codeBlocks.forEach(codeBlock => {
+            codeBlock.classList.remove('language-mermaid');
+            codeBlock.classList.add('mermaid');
+        });
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
 </body>
+
 </html>

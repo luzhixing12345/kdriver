@@ -88,3 +88,15 @@ insmod: ERROR: could not insert module hello.ko: Key was rejected by service
 root@kamilu:/home/kamilu/Desktop/linux-driver/src/01-module# dmesg
 [ 1920.607501] Loading of unsigned module is rejected
 ```
+
+```bash
+root@ubuntu:/home/lzx/Driver/module# dmesg -c
+[  617.165226] hello: loading out-of-tree module taints kernel.
+[  617.165343] hello: module verification failed: signature and/or required key missing - tainting kernel
+[  617.166355] hello_init 
+[  804.914998] hello_exit
+```
+
+https://lantern.cool/note-pwn-kernel-compilation-problem/#gcc-%E7%89%88%E6%9C%AC%E9%97%AE%E9%A2%98
+
+https://richardweiyang-2.gitbook.io/kernel-exploring/00_index/10_those_buddy_in_kbuild
