@@ -34,9 +34,11 @@
 main
 /termart/
 src/.clang-format
-.vscode/
 *.cmd
 *.ko
 modules.order
 *.mod.c
 Module.symvers
+*.mk
+*/*/.tmp_versions
+/docs

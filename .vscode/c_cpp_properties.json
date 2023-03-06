@@ -1,0 +1,25 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/src/linux-headers-4.15.0-112/include",
+                "/usr/src/linux-headers-4.15.0-112-generic/include",
+                "/usr/src/linux-headers-4.15.0-112-generic/arch/x86/include",
+                "/usr/src/linux-headers-4.15.0-112/include/uapi",
+                "/usr/src/linux-headers-4.15.0-112-generic/arch/x86/include/generated"
+            ],
+            "defines": [
+                "__KERNEL__",
+                "__GNUC__"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "${default}",
+            "compilerArgs": []
+        }
+    ],
+    "version": 4
+}
