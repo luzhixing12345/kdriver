@@ -153,7 +153,48 @@ MODULE_INFO(vermagic, "4.15.0-112-generic SMP mod_unload ");
 
 **但是请注意**,这种方式可能会带来一些问题, 如果驱动使用到了一些被遗弃或修改的API接口可能会出现严重的问题, 但这种方式在前期开发的时候还是带来了很大的方便
 
-第三种方式就是直接将驱动模块编译进内核
+第三种方式就是直接将驱动模块编译进内核, 内核开发人员可以根据不同需求针对某个CPU家族的某种特定处理器进行优化, 从而充分利用目标平台的特性
+
+最好的办法是使用GPL许可发布驱动,将其贡献给内核主分支, 这是最容易被其他人接受的方式
+
+## 多文件编译
+
+对于单个文件 hello.c 直接使用 `obj-m := hello.o` 即可
+
+```Makefile
+ifneq ($(KERNELRELEASE),)
+obj-m:=hello.o
+else
+# KDIR := /home/kamilu/Downloads/linux-4.19.83
+KDIR := /lib/modules/$(shell uname -r)/build
+PWD  :=$(shell pwd)
+all:
+	make -C $(KDIR) M=$(PWD) modules
+clean:
+	rm -f *.ko *.o *.mod.o *.symvers *.cmd  *.mod.c *.order
+endif
+```
+
+如果是使用多文件编程则需要稍作修改
+
+```Makefile
+ifneq ($(KERNELRELEASE),)
+obj-m := hello.o
+hello-objs := hellox.o func.o
+else
+# KDIR := /home/kamilu/Downloads/linux-4.19.83
+KDIR := /lib/modules/$(shell uname -r)/build
+PWD  :=$(shell pwd)
+all:
+	make -C $(KDIR) M=$(PWD) modules 
+clean:
+	rm -f *.ko *.o *.mod.o *.symvers *.cmd  *.mod.c *.order
+endif
+```
+
+这里的 hello.o 代表模块名, 对应的模块为 `hello-objs`, 由 hellox.c func.c 两个文件编译得到
+
+注意这里的模块名是 hello, 编译所需的两个文件都不能叫hello否则会重名出现错误
 
 ## 参考
 
