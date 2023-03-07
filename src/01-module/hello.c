@@ -3,7 +3,8 @@
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("PD");
+MODULE_AUTHOR("kamilu");
+MODULE_INFO(vermagic, "4.15.0-112-generic SMP mod_unload ");
 
 static int hello_init(void)
 {

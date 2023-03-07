@@ -7,7 +7,7 @@
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("PD");
+MODULE_AUTHOR("kamilu");
 
 static int num = 100;
 static void show(void)

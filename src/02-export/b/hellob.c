@@ -8,7 +8,7 @@
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("PD");
+MODULE_AUTHOR("kamilu");
 
 extern int num;
 extern void show(void);

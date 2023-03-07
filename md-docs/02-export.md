@@ -12,7 +12,7 @@ Linux 内核的全局符号表在 `/usr/src/linux-headers-4.15.0-142-generic/Mod
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("PD");
+MODULE_AUTHOR("kamilu");
 
 extern int num;
 extern  void show(void);
@@ -60,7 +60,7 @@ b中的文件如下
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("PD");
+MODULE_AUTHOR("kamilu");
 
 extern int num;
 extern void show(void);
