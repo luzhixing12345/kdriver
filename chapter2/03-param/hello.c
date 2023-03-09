@@ -6,6 +6,9 @@
 
 #include <linux/init.h>
 #include <linux/module.h>
+#include <linux/moduleparam.h>
+
+#define KBUILD_MODNAME "hello"
 
 static char *whom = "hello \n";
 static int var = 1;

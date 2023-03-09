@@ -12,5 +12,5 @@ PWD  := $(shell pwd)
 all:
 	make -C $(KDIR) M=$(PWD) modules 
 clean:
-	@rm -f *.ko *.o *.mod.o *.symvers *.mod.c *.order .*.cmd .cache.mk 
+	@rm -f *.ko *.o *.mod.o *.symvers *.mod.c *.order .*.cmd .cache.mk
 endif
